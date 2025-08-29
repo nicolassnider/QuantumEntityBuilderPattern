@@ -5,7 +5,16 @@ namespace QuantumEntityBuilderPattern.Builders;
 
 
 /// <summary>
-/// Generic base class for Schrodinger entity builders.
+/// Generic abstract base class for quantum entity builders, implementing the <see cref="ISchrodingerBuilder"/> interface.
+/// <para>
+/// <see cref="SchrodingerBuilderBase{T}"/> provides reusable logic for constructing quantum-inspired entities
+/// (such as cats, dogs, or butterflies) that inherit from <see cref="SchrodingerEntity"/>.
+/// </para>
+/// <para>
+/// It encapsulates the process of initializing the entity's quantum state using a functional configuration delegate,
+/// supporting scenarios such as superposition, alive, or dead states. The builder pattern enables flexible,
+/// extensible, and testable creation of quantum entities by decoupling construction logic from entity representation.
+/// </para>
 /// </summary>
 public abstract class SchrodingerBuilderBase<T> : ISchrodingerBuilder where T : SchrodingerEntity, new()
 {
