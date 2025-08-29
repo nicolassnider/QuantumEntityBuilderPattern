@@ -1,11 +1,12 @@
 ﻿namespace QuantumEntityBuilderPattern.Story;
 /// <summary>
-/// Represents an element of a quantum story.
+/// Defines a contract for elements that compose a quantum story.
+/// Implementing types must provide a string representation of the element
+/// via the <see cref="Render"/> method, enabling consistent rendering of
+/// various story components such as actions, events, or narrative lines.
 /// </summary>
 public interface IQuantumStoryElement
 {
-    /// <summary>
-    /// Renders the story element as a string.
-    /// </summary>
+
     string Render();
 }

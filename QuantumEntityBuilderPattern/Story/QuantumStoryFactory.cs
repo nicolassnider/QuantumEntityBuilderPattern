@@ -2,6 +2,13 @@
 using QuantumEntityBuilderPattern.Quantum;
 
 namespace QuantumEntityBuilderPattern.Story;
+
+/// Provides factory methods for constructing quantum stories involving quantum-inspired entities.
+/// The <see cref="Create"/> method generates a <see cref="QuantumStory{IQuantumStoryElement}"/> that narrates
+/// quantum scenarios (such as Schrödinger's cat and a butterfly) by composing narrative and action elements.
+/// It simulates quantum state superposition and collapse for each entity, dynamically building the story
+/// based on random outcomes and updating the entities' states accordingly.
+/// </summary>
 public static class QuantumStoryFactory
 {
     public static QuantumStory<IQuantumStoryElement> Create(SchrodingerEntity cat, SchrodingerEntity butterfly)

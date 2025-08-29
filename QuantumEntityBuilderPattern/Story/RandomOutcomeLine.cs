@@ -1,7 +1,10 @@
 ﻿namespace QuantumEntityBuilderPattern.Story;
 
 /// <summary>
-/// Represents a story element that renders a random outcome.
+/// Represents a story element that renders a random outcome as part of a quantum story.
+/// When rendered, selects between two possible text outputs based on a random boolean value.
+/// Optionally executes a callback with the outcome and allows injection of a custom randomization function
+/// for deterministic or testable behavior.
 /// </summary>
 public class RandomOutcomeLine : IQuantumStoryElement
 {
