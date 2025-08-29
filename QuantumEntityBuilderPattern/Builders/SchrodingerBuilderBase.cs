@@ -1,6 +1,8 @@
 ﻿using QuantumEntityBuilderPattern.Entities;
+using QuantumEntityBuilderPattern.Quantum;
 
 namespace QuantumEntityBuilderPattern.Builders;
+
 
 /// <summary>
 /// Generic base class for Schrodinger entity builders.
@@ -11,7 +13,13 @@ public abstract class SchrodingerBuilderBase<T> : ISchrodingerBuilder where T : 
 
     public void BuildState(Func<bool?>? stateConfigurator = null)
     {
-        _entity.SetState(stateConfigurator?.Invoke() ?? null);
+        bool? state = stateConfigurator?.Invoke();
+        QuantumState<bool> quantumState = state switch
+        {
+            null => QuantumState<bool>.Superposition(),
+            bool value => QuantumState<bool>.Observed(value)
+        };
+        _entity.SetState(quantumState);
     }
 
     public SchrodingerEntity GetEntity()
