@@ -1,19 +1,11 @@
 ﻿using QuantumEntityBuilderPattern.Entities;
 
 namespace QuantumEntityBuilderPattern.Builders;
-public class CatBuilder : ISchrodingerBuilder
-{
-    private SchrodingerCat _cat = new SchrodingerCat();
 
-    public void BuildState()
-    {
-        _cat.SetState(null); // Cat starts in superposition
-    }
-
-    public SchrodingerEntity GetEntity()
-    {
-        var result = _cat;
-        _cat = new SchrodingerCat(); // Reset for next build
-        return result;
-    }
-}
+/// <summary>
+/// Builder for creating <see cref="SchrodingerCat"/> instances.
+/// </summary>
+/// <summary>
+/// Builder for creating <see cref="SchrodingerCat"/> instances.
+/// </summary>
+public class CatBuilder : SchrodingerBuilderBase<SchrodingerCat> { }
