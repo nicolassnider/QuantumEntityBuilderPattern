@@ -2,9 +2,6 @@
 
 namespace QuantumEntityBuilderPattern.Entities;
 
-/// <summary>
-/// Abstract base class for quantum entities that can be alive, dead, or in superposition.
-/// </summary>
 public abstract class SchrodingerEntity
 {
     public QuantumState<bool> State { get; protected set; } = QuantumState<bool>.Superposition();

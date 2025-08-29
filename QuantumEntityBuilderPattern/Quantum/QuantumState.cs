@@ -1,4 +1,5 @@
 ﻿namespace QuantumEntityBuilderPattern.Quantum;
+
 /// <summary>
 /// Represents a quantum state: superposition (unknown) or observed (known value).
 /// </summary>
