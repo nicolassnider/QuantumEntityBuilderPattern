@@ -1,5 +1,4 @@
-﻿namespace QuantumEntityBuilderPattern.Entities;
-public abstract class SchrodingerEntity
+﻿public abstract class SchrodingerEntity
 {
     public bool? IsAlive { get; protected set; }
 
