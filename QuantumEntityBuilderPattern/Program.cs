@@ -1,35 +1,35 @@
-﻿using QuantumEntityBuilderPattern.Builders;
+using System;
+using System.Collections.Generic;
 using QuantumEntityBuilderPattern.Factory;
 using QuantumEntityBuilderPattern.Story;
 
 /// <summary>
 /// Entry point for the QuantumEntityBuilderPattern demonstration.
 ///
-/// This program narrates a quantum-inspired story using the Builder and Factory design patterns.
-/// It creates quantum entities (a cat and a butterfly) that exist in a superposition of states
-/// until observed, reflecting the famous Schrödinger's Cat thought experiment.
-///
-/// The story logic is encapsulated in the QuantumStoryFactory, which builds a customizable
-/// sequence of narrative and action elements. The quantum state of each entity is randomly
-/// determined upon "observation," and the story output reflects the result, including humorous
-/// or moral commentary for certain outcomes.
+/// This program narrates a quantum-inspired story using the Abstract Factory and Strategy design patterns.
+/// It creates quantum entities (like a cat and a butterfly) and their corresponding narrative scenarios,
+/// reflecting the famous Schrödinger's thought experiments.
 ///
 /// Key features demonstrated:
-/// - Use of Builder and Factory patterns for flexible entity creation.
-/// - Modular, extensible story construction using generic and interface-based elements.
-/// - Simulation of quantum superposition and state collapse upon observation.
-/// - Clear separation of story logic from program orchestration for maintainability.
+/// - Use of Abstract Factory pattern to create related families of objects (Entities and Scenarios).
+/// - Use of Strategy pattern to dynamically select how an entity's story is told.
+/// - Clean architecture adhering to SOLID (Open/Closed Principle) and DRY principles.
 /// </summary>
 
-var catFactory = new SchrodingerFactory(new CatBuilder());
-var butterflyFactory = new SchrodingerFactory(new ButterflyBuilder());
+Console.WriteLine("--- Quantum Entity Narrative Simulator ---\n");
 
-var cat = catFactory.CreateEntity();
-var butterfly = butterflyFactory.CreateEntity();
+var experimentFactories = new List<IQuantumExperimentFactory>
+{
+    new CatExperimentFactory(),
+    new ButterflyExperimentFactory()
+};
 
-var story = QuantumStoryFactory.Create(cat, butterfly);
+var story = QuantumStoryFactory.Create(experimentFactories);
 
 foreach (var line in story.RenderStory())
+{
     Console.WriteLine(line);
+}
 
+Console.WriteLine("\nPress any key to exit...");
 Console.ReadKey();

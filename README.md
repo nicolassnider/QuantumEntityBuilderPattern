@@ -1,6 +1,8 @@
 # QuantumEntityBuilderPattern
 
-**QuantumEntityBuilderPattern** is a C# demonstration of the Builder and Factory design patterns, applied to quantum-inspired entities using the famous Schrödinger's Cat thought experiment as a creative example.
+**QuantumEntityBuilderPattern** is a C# demonstration of clean architecture using the **Abstract Factory** and **Strategy** design patterns, applied to quantum-inspired entities using the famous Schrödinger's Cat thought experiment as a creative example.
+
+*(Note: The repository name retains "BuilderPattern" for historical reasons, but the codebase has been aggressively refactored to prioritize clean code, DRY, and SOLID principles over unnecessary patterns).*
 
 ![.NET](https://img.shields.io/badge/.NET-8.0-blue)
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
@@ -22,18 +24,19 @@
 
 ## Overview
 
-This project showcases the implementation of the Builder and Factory design patterns in C#, centered around quantum-inspired entities. The application narrates a quantum story, describing entities (Cat, Dog, Butterfly) in superposition, alive, or dead states.
+This project showcases the implementation of the Abstract Factory and Strategy design patterns in C#, centered around quantum-inspired entities. The application narrates a quantum story, describing entities (Cat, Butterfly) in superposition, alive, or dead states. 
+
+By grouping an entity and its narrative scenario into a single abstract factory, the codebase adheres strictly to the Open/Closed Principle (OCP) and the Don't Repeat Yourself (DRY) principle.
 
 ---
 
 ## Features
 
-- **Builder Pattern**: Encapsulates construction logic for quantum entities (`CatBuilder`, `DogBuilder`, `ButterflyBuilder`) via the `ISchrodingerBuilder` interface and a generic base class.
-- **Factory Pattern**: The `SchrodingerFactory` class creates entities using any provided builder, promoting extensibility and separation of concerns.
-- **Quantum Entities**: All entities inherit from the abstract base class `SchrodingerEntity`, with concrete implementations like `SchrodingerCat`, `SchrodingerDog`, and `SchrodingerButterfly`.
-- **Superposition State**: Entities can be in superposition (unknown state), alive, or dead, demonstrating quantum mechanics concepts.
-- **Storytelling**: The application narrates a quantum story for each entity, showing their state and scenario.
-- **Flexible State Configuration**: Builders support optional state configuration functions for flexible entity creation and testing.
+- **Abstract Factory Pattern**: Encapsulates the creation of related object families (a `SchrodingerEntity` and its corresponding `IStoryScenario`) via the `IQuantumExperimentFactory` interface.
+- **Strategy Pattern**: The narrative logic is decoupled into `IStoryScenario` strategies (`BoxScenario`, `HandScenario`), allowing dynamic story generation without hardcoding.
+- **Clean Architecture**: Eliminates over-engineered builders in favor of simple, intention-revealing factory combinations.
+- **Quantum Entities**: All entities inherit from `SchrodingerEntity`, with concrete implementations like `SchrodingerCat` and `SchrodingerButterfly`.
+- **Superposition State**: Entities can be in superposition (unknown state), alive, or dead, demonstrating quantum mechanics concepts using a custom `QuantumState<T>` monad.
 
 ---
 
@@ -41,17 +44,22 @@ This project showcases the implementation of the Builder and Factory design patt
 
 ```text
 QuantumEntityBuilderPattern/
-├── Builders/
-│   ├── CatBuilder.cs
-│   ├── DogBuilder.cs
-│   └── ISchrodingerBuilder.cs
 ├── Entities/
 │   ├── SchrodingerCat.cs
-│   ├── SchrodingerDog.cs
 │   ├── SchrodingerButterfly.cs
 │   └── SchrodingerEntity.cs
 ├── Factory/
-│   └── SchrodingerFactory.cs
+│   ├── IQuantumExperimentFactory.cs
+│   ├── CatExperimentFactory.cs
+│   └── ButterflyExperimentFactory.cs
+├── Story/
+│   ├── IStoryScenario.cs
+│   ├── BoxScenario.cs
+│   ├── HandScenario.cs
+│   ├── QuantumStory.cs
+│   └── QuantumStoryFactory.cs
+├── Quantum/
+│   └── QuantumState.cs
 ├── Program.cs
 └── QuantumEntityBuilderPattern.csproj
 ```
@@ -80,14 +88,18 @@ QuantumEntityBuilderPattern/
 
 2. **Example Code**
    ```csharp
-   var catFactory = new SchrodingerFactory(new CatBuilder());
-   var dogFactory = new SchrodingerFactory(new DogBuilder());
+   var experimentFactories = new List<IQuantumExperimentFactory>
+   {
+       new CatExperimentFactory(),
+       new ButterflyExperimentFactory()
+   };
 
-   var cat = catFactory.CreateEntity();
-   var dog = dogFactory.CreateEntity();
+   var story = QuantumStoryFactory.Create(experimentFactories);
 
-   Console.WriteLine(cat.Describe());
-   Console.WriteLine(dog.Describe());
+   foreach (var line in story.RenderStory())
+   {
+       Console.WriteLine(line);
+   }
    ```
 
 ---
@@ -95,8 +107,22 @@ QuantumEntityBuilderPattern/
 ## Example Output
 
 ```text
-The cat is in a superposition of states.
-The dog is in a superposition of states.
+--- Quantum Entity Narrative Simulator ---
+
+Suppose you put a cat in a box...
+Inside the box, there is a mechanism that may or may not release a poisonous gas.
+Until you open the box, you do not know whether the gas has been released, or if the cat is alive or dead.
+Cat status: Superposition (Superposition? True)
+[ACTION] You open the box to observe the cat's fate.
+When you open the box, you see the cat is alive!
+Cat status: Alive (Superposition? False)
+
+Suppose you put a butterfly in your hand...
+Butterfly status: Superposition (Superposition? True)
+[ACTION] You crush your hand.
+When you open your hand, the butterfly is dead.
+[ACTION] Shame on you.
+Butterfly status: Dead (Superposition? False)
 ```
 
 ---

@@ -1,5 +1,5 @@
-﻿namespace QuantumEntityBuilderPattern.Entities;
+namespace QuantumEntityBuilderPattern.Entities;
 public class SchrodingerCat : SchrodingerEntity
 {
-    protected override string EntityName => "cat";
+    public override string EntityName => "cat";
 }
