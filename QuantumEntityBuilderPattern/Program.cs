@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using QuantumEntityBuilderPattern.Factory;
 using QuantumEntityBuilderPattern.Story;
 
@@ -18,18 +20,66 @@ using QuantumEntityBuilderPattern.Story;
 
 Console.WriteLine("--- Quantum Entity Narrative Simulator ---\n");
 
-var experimentFactories = new List<IQuantumExperimentFactory>
-{
-    new CatExperimentFactory(),
-    new ButterflyExperimentFactory()
-};
+var factoryTypes = Assembly.GetExecutingAssembly()
+    .GetTypes()
+    .Where(t => typeof(IQuantumExperimentFactory).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract)
+    .ToList();
 
-var story = QuantumStoryFactory.Create(experimentFactories);
+var experimentFactories = factoryTypes
+    .Select(t => (IQuantumExperimentFactory)Activator.CreateInstance(t)!)
+    .ToList();
 
-foreach (var line in story.RenderStory())
+while (true)
 {
-    Console.WriteLine(line);
+    Console.WriteLine("Available Experiments:");
+    for (int i = 0; i < experimentFactories.Count; i++)
+    {
+        Console.WriteLine($"{i + 1}. {experimentFactories[i].GetType().Name.Replace("ExperimentFactory", "")}");
+    }
+    Console.WriteLine($"{experimentFactories.Count + 1}. Run All Experiments");
+    Console.WriteLine("q. Quit");
+    Console.Write("\nSelect an option: ");
+    
+    var input = Console.ReadLine();
+    if (input?.ToLower() == "q")
+    {
+        break;
+    }
+    
+    if (int.TryParse(input, out int choice))
+    {
+        Console.Clear();
+        if (choice >= 1 && choice <= experimentFactories.Count)
+        {
+            Console.WriteLine($"--- Running {experimentFactories[choice - 1].GetType().Name.Replace("ExperimentFactory", "")} Experiment ---\n");
+            
+            var selectedFactory = new List<IQuantumExperimentFactory> { experimentFactories[choice - 1] };
+            var story = QuantumStoryFactory.Create(selectedFactory);
+            
+            foreach (var line in story.RenderStory())
+            {
+                Console.WriteLine(line);
+            }
+            Console.WriteLine("\n--------------------------------------------------\n");
+        }
+        else if (choice == experimentFactories.Count + 1)
+        {
+            Console.WriteLine($"--- Running All Experiments ---\n");
+            var story = QuantumStoryFactory.Create(experimentFactories);
+            
+            foreach (var line in story.RenderStory())
+            {
+                Console.WriteLine(line);
+            }
+            Console.WriteLine("\n--------------------------------------------------\n");
+        }
+        else
+        {
+            Console.WriteLine("Invalid choice. Please try again.\n");
+        }
+    }
+    else
+    {
+        Console.WriteLine("Invalid choice. Please try again.\n");
+    }
 }
-
-Console.WriteLine("\nPress any key to exit...");
-Console.ReadKey();

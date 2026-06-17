@@ -13,22 +13,29 @@ public class HandScenario : IStoryScenario
 
         story.AddElement(new NarrativeLine($"Suppose you put a {name} in your hand..."));
         story.AddElement(new NarrativeLine($"{capitalizedName} status: {entity.State.GetStatus()} (Superposition? {entity.State.IsInSuperposition()})"));
-        story.AddElement(new ActionLine("You crush your hand."));
-
-        bool outcome = new Random().Next(2) == 0;
-        entity.Observe(outcome);
-
-        if (outcome)
-        {
-            story.AddElement(new NarrativeLine($"When you open your hand, the {name} is alive and flies away!"));
-        }
-        else
-        {
-            story.AddElement(new NarrativeLine($"When you open your hand, the {name} is dead."));
-            story.AddElement(new ActionLine("Shame on you."));
-        }
-        
-        story.AddElement(new NarrativeLine($"{capitalizedName} status: {entity.State.GetStatus()} (Superposition? {entity.State.IsInSuperposition()})"));
-        story.AddElement(new NarrativeLine(""));
+        story.AddElement(new UserDecisionLine(
+            $"Do you crush your hand?",
+            decision => 
+            {
+                if (decision)
+                {
+                    bool outcome = new Random().Next(2) == 0;
+                    entity.Observe(outcome);
+                }
+            },
+            decision => 
+            {
+                if (!decision)
+                {
+                    return $"You decided to spare the {name}. {capitalizedName} status: {entity.State.GetStatus()} (Superposition? {entity.State.IsInSuperposition()})\n";
+                }
+                
+                string outcomeText = entity.State.GetStatus() == "Alive" 
+                    ? $"When you open your hand, the {name} is alive and flies away!" 
+                    : $"When you open your hand, the {name} is dead.\n*Shame on you.*";
+                
+                return $"{outcomeText}\n{capitalizedName} status: {entity.State.GetStatus()} (Superposition? {entity.State.IsInSuperposition()})\n";
+            }
+        ));
     }
 }
